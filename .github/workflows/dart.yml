@@ -1,0 +1,38 @@
+name: Dart
+
+on:
+  push:
+    branches: [ "Home" ]
+  pull_request:
+    branches: [ "Home" ]
+
+jobs:
+  build_apk:
+    name: Build Flutter (Android)
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - uses: actions/setup-java@v1
+      with:
+        java-version: '12.x'
+    - uses: subosito/flutter-action@v2
+      with: 
+          flutter-version: '3.0.5'
+          channel: 'stable'
+    - run: flutter pub get
+      env:
+        FLUTTER_LOCAL_ENGINE_VERSION: 3.0.5
+        FLUTTER_VERSION: 3.0.5
+    - name: Build android arm
+      run: flutter build apk
+      env:
+        FLUTTER_LOCAL_ENGINE_VERSION: 3.0.5
+        FLUTTER_VERSION: 3.0.5
+    - name: send apk as a message
+      uses: appleboy/telegram-action@master
+      with:
+        to: ${{ secrets.MESSAGEID }}
+        token: ${{ secrets.BOTTOKEN }}
+        message: |
+          NEW VERSION OF CONSULTING APP : ${{ github.event.head_commit.message }}
+        document: ${{ github.workspace }}/build/app/outputs/apk/release/app-release.apk

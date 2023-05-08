@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<string name="facebook_app_id">611400863490991</string>
+ <string name="fb_login_protocol_scheme">fb611400863490991</string>
+ <string name="app_name">consuliting app</string>
+    <string name="default_notification_channel_id">com.consuliting.app</string>
+</resources>

@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "451884825916",
+    "project_id": "consuliting-app",
+    "storage_bucket": "consuliting-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:451884825916:android:eb943a439fc7a4a0e0f239",
+        "android_client_info": {
+          "package_name": "com.consuliting.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "451884825916-msqi3q1fp31dt595sa3fpktvd53jq6q3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.consuliting.app",
+            "certificate_hash": "3d43cb7d21e76b7e94a13a7e13501a59dc964f67"
+          }
+        },
+        {
+          "client_id": "451884825916-9iin2l7h5eg82jlj3v4gu4p4qdsne0sm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_KR0Prq3nvV1RjtYRU4v6OPb77HcmCYQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "451884825916-9iin2l7h5eg82jlj3v4gu4p4qdsne0sm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
