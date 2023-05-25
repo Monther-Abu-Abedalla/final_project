@@ -5,17 +5,20 @@ import 'package:consulting_app/feature/view/screens/auth/choose_topics_screen.da
 import 'package:consulting_app/feature/view/screens/auth/choose_user_type_screen.dart';
 import 'package:consulting_app/feature/view/screens/auth/login_screen.dart';
 import 'package:consulting_app/feature/view/screens/home/home_screen.dart';
+import 'package:consulting_app/feature/view_model/home_view_model/home_view_model.dart';
 import 'package:consulting_app/utils/constance/constance.dart';
 import 'package:consulting_app/utils/shared/sh_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get_instance/src/extension_instance.dart';
+import 'package:get/route_manager.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    Future.delayed(const Duration(seconds: 2), () => _routeMethod(context));
+  Widget build(BuildContext context) {    
+     Future.delayed(const Duration(seconds: 2), () => _routeMethod());
 
     return Scaffold(
       backgroundColor: ColorManger.instance.primaryColor,
@@ -49,40 +52,30 @@ class SplashScreen extends StatelessWidget {
     );
   }
 
-  _routeMethod(BuildContext context) async {
+  _routeMethod() async {
+   
     await AppFcm.fcmInstance.getTokenFCM();
 
     if ((SharedPref.instance.getUserLoginState() ==
         Constance.instance.userEnterdState)) {
       //Go to Auth
-
-      // ignore: use_build_context_synchronously
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => LoginScreen()));
+      Get.off(() => LoginScreen());
     } else if (SharedPref.instance.getUserLoginState() ==
-        Constance.instance.userLoginedState) {
+        Constance.instance.userLoggedState) {
       //Go to Home
-      // ignore: use_build_context_synchronously
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => const HomeScreen()));
+      Get.put(HomeViewModel(), permanent: true);
+      Get.off(() => const HomeScreen());
+      
     } else if (SharedPref.instance.getUserLoginState() ==
         Constance.instance.chooseTopicsState) {
-      // ignore: use_build_context_synchronously
-      Navigator.pushReplacement(context,
-          MaterialPageRoute(builder: (context) => const ChooseTopicsScreen()));
+      Get.off(() => const ChooseTopicsScreen());
     } else if (SharedPref.instance.getUserLoginState() ==
         Constance.instance.userAddCertificates) {
-      // ignore: use_build_context_synchronously
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => LoginScreen()));
+      Get.off(() => LoginScreen());
     } else {
       //Go to Intro
       //to do Put Intro For First Open :
-      // ignore: use_build_context_synchronously
-      Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (context) => const ChooseUserTypeScreen()));
+      Get.off(() => const ChooseUserTypeScreen());
     }
   }
 }

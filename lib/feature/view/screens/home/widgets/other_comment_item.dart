@@ -1,13 +1,14 @@
 import 'package:consulting_app/feature/core/theme/color/color_manger.dart';
+import 'package:consulting_app/feature/model/home/comment_model.dart';
 import 'package:consulting_app/feature/view/screens/home/widgets/report_block_popup_item.dart';
 import 'package:flutter/material.dart';
 
 import '../../../widget/image_network.dart';
 
 class AthorCommentItem extends StatelessWidget {
-  const AthorCommentItem({
-    Key? key,
-  }) : super(key: key);
+  const AthorCommentItem({Key? key, required this.comment}) : super(key: key);
+
+  final Comment comment;
 
   @override
   Widget build(BuildContext context) {
@@ -34,14 +35,14 @@ class AthorCommentItem extends StatelessWidget {
                 SizedBox(
                     width: double.infinity,
                     child: Text(
-                      "",
+                      comment.makerName ?? "",
                       style: Theme.of(context).textTheme.headlineSmall,
                     )),
                 const SizedBox(
                   height: 16,
                 ),
-                const Text(
-                  "",
+                Text(
+                  comment.content ?? "",
                 )
               ],
             ),
@@ -49,10 +50,9 @@ class AthorCommentItem extends StatelessWidget {
           const SizedBox(
             width: 16,
           ),
-          const ClipOval(
+          ClipOval(
             child: CustomImageNetwork(
-             
-              url: "",
+              url: comment.makerImageUrl,
             ),
           ),
         ],

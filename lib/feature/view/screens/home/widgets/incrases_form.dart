@@ -2,11 +2,17 @@
 
 import 'package:consulting_app/feature/core/theme/color/color_manger.dart';
 import 'package:consulting_app/feature/view/widget/primary_button.dart';
+import 'package:consulting_app/feature/view_model/home_view_model/home_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:provider/provider.dart';
+
+import 'custom_loading.dart';
 
 class IncraesesForm extends StatelessWidget {
   IncraesesForm({Key? key}) : super(key: key);
 
+  static HomeViewModel homeViewModel = Get.find<HomeViewModel>();
   GlobalKey<FormState> myKey = GlobalKey<FormState>();
 
   @override
@@ -38,6 +44,7 @@ class IncraesesForm extends StatelessWidget {
                   ),
                   Expanded(
                       child: TextFormField(
+                    controller: homeViewModel.tdTime,
                     validator: (e) {
                       if (e!.trim().isEmpty) {
                         return 'هذا الحقل فارغ';
@@ -68,6 +75,7 @@ class IncraesesForm extends StatelessWidget {
                       }
                       return null;
                     },
+                    controller: homeViewModel.tdPrice,
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
                         errorStyle: TextStyle(
@@ -91,10 +99,25 @@ class IncraesesForm extends StatelessWidget {
         const SizedBox(
           height: 30,
         ),
-        PrimaryButton(
-          textButton: "تأكيد",
-          onClicked: () {},
-        )
+        Consumer<HomeViewModel>(
+          builder: (_, builder, __) {
+            if (builder.isLoading) {
+              return const CustomLoading();
+            } else {
+              return PrimaryButton(
+                isLoading: builder.isLoading,
+                textButton: "تأكيد",
+                onClicked: () {
+                  if (myKey.currentState!.validate()) {
+                    builder.addConsultationSubscription(
+                      postId: homeViewModel.operationPost.id ?? -1,
+                    );
+                  }
+                },
+              );
+            }
+          },
+        ),
       ],
     );
   }

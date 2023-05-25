@@ -1,11 +1,16 @@
 import 'package:consulting_app/feature/core/theme/input_theme/app_text_field_theme.dart';
 import 'package:consulting_app/feature/view/widget/primary_button.dart';
+import 'package:consulting_app/feature/view_model/home_view_model/home_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../../../../../model/home/subscription_model.dart';
 
 class SubscriptionBottomSheet extends StatelessWidget {
-  const SubscriptionBottomSheet({
-    Key? key,
-  }) : super(key: key);
+  const SubscriptionBottomSheet({Key? key, required this.subscription})
+      : super(key: key);
+
+  final Subscription subscription;
 
   @override
   Widget build(BuildContext context) {
@@ -16,18 +21,27 @@ class SubscriptionBottomSheet extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            "تمديد الاستشارة لمدة ${const Duration(milliseconds: 0).inMinutes} دقائق",
+            "تمديد الاستشارة لمدة ${Duration(milliseconds: subscription.exteaTime?.toInt() ?? 0).inMinutes} دقائق",
             style: Theme.of(context).textTheme.headlineMedium,
           ),
           const SizedBox(height: 32),
           Text(
-            "سعر التمديد ",
+            "سعر التمديد ${subscription.extraTimePrice}",
             style: Theme.of(context).textTheme.headlineMedium,
           ),
           const SizedBox(height: 32),
-          PrimaryButton(
-            textButton: "تأكيد العملية",
-            onClicked: () {},
+          Consumer<HomeViewModel>(
+            builder: (_ , build , __) {
+              return PrimaryButton(
+                isLoading: build.isLoading,
+                textButton: "تأكيد العملية",
+                onClicked: () {
+                  build.makePayment(
+                    subscription: subscription,
+                  );
+                },
+              );
+            },
           )
         ],
       ),

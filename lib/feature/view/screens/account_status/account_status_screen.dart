@@ -1,12 +1,18 @@
+import 'package:consulting_app/feature/view/screens/home/home_screen.dart';
+import 'package:consulting_app/feature/view/screens/home/widgets/custom_loading.dart';
+import 'package:consulting_app/feature/view_model/home_view_model/home_view_model.dart';
 import 'package:consulting_app/utils/constance/constance.dart';
 import 'package:consulting_app/utils/shared/sh_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 
 class AccountStatusScreen extends StatelessWidget {
   const AccountStatusScreen({Key? key, required this.isFromNotification})
       : super(key: key);
 
+  static HomeViewModel homeViewModel = Get.find<HomeViewModel>();
   final bool isFromNotification;
 
   Widget image() {
@@ -31,9 +37,9 @@ class AccountStatusScreen extends StatelessWidget {
 
   Future<bool> onWillPop() async {
     if (isFromNotification) {
-      // Get.off(() => const HomeScreen());
+      Get.off(() => const HomeScreen());
     } else {
-      // Get.back();
+      Get.back();
     }
     return true;
   }
@@ -52,29 +58,47 @@ class AccountStatusScreen extends StatelessWidget {
             icon: const Icon(Icons.arrow_back),
           ),
         ),
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const SizedBox(
-              height: 24,
-              width: double.infinity,
-            ),
-            image(),
-            const SizedBox(
-              height: 30,
-            ),
-            Text(
-              SharedPref.instance.getAccountStatus(),
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-            const SizedBox(
-              height: 24,
-            ),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              child: Text(""),
-            )
-          ],
+        body: Consumer<HomeViewModel>(
+          // initState: ( s,_ , d) async {
+          //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+          //     await homeViewModel.getProfile();
+          //   });
+          // },
+          builder: (_, home, __) {
+            if (home.isLoadingProfile) {
+              return const CustomLoading();
+            } else if (GetUtils.isNull(
+                SharedPref.instance.getCurrentUserData()?.email)) {
+              return const SizedBox();
+            } else {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const SizedBox(
+                    height: 24,
+                    width: double.infinity,
+                  ),
+                  image(),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  Text(
+                    SharedPref.instance.getAccountStatus(),
+                    style: Theme.of(context).textTheme.headlineMedium,
+                  ),
+                  const SizedBox(
+                    height: 24,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Text(
+                        SharedPref.instance.getCurrentUserData()?.denyReason ??
+                            ""),
+                  )
+                ],
+              );
+            }
+          },
         ),
       ),
     );

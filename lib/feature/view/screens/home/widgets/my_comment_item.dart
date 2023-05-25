@@ -1,12 +1,13 @@
 import 'package:consulting_app/feature/core/theme/color/color_manger.dart';
+import 'package:consulting_app/feature/model/home/comment_model.dart';
 import 'package:flutter/material.dart';
 
 import '../../../widget/image_network.dart';
 
 class MyCommentItem extends StatelessWidget {
-  const MyCommentItem({
-    Key? key,
-  }) : super(key: key);
+  const MyCommentItem({Key? key, required this.comment}) : super(key: key);
+
+  final Comment comment;
 
   @override
   Widget build(BuildContext context) {
@@ -16,9 +17,9 @@ class MyCommentItem extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const ClipOval(
+          ClipOval(
             child: CustomImageNetwork(
-              url: "",
+              url: comment.makerImageUrl,
             ),
           ),
           const SizedBox(
@@ -37,14 +38,14 @@ class MyCommentItem extends StatelessWidget {
                 SizedBox(
                     width: double.infinity,
                     child: Text(
-                      "Monther Abu Abedallah",
+                      comment.makerName ?? "",
                       style: Theme.of(context).textTheme.headlineSmall,
                     )),
                 const SizedBox(
                   height: 16,
                 ),
-                const Text(
-                  "So nice",
+                Text(
+                  comment.content ?? "",
                 )
               ],
             ),

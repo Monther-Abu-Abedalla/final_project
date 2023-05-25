@@ -2,18 +2,25 @@
 
 import 'package:consulting_app/feature/core/theme/color/color_manger.dart';
 import 'package:consulting_app/feature/core/theme/text_theme/text_manger.dart';
+import 'package:consulting_app/feature/model/auth/user_model.dart';
 import 'package:consulting_app/feature/view/screens/auth/login_screen.dart';
 import 'package:consulting_app/feature/view/screens/auth/widgets/social_media.dart';
 import 'package:consulting_app/feature/view/screens/auth/widgets/spacer_divider.dart';
 import 'package:consulting_app/feature/view/widget/custom_text_field.dart';
 import 'package:consulting_app/feature/view/widget/secondery_button.dart';
+import 'package:consulting_app/feature/view_model/auth_view_model/auth_view_model.dart';
+import 'package:consulting_app/utils/shared/sh_util.dart';
 import 'package:consulting_app/utils/util/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 
 class RegisterScreen extends StatelessWidget {
   RegisterScreen({Key? key}) : super(key: key);
 
+  static final AuthViewModel _authViewModel =
+      Get.put(AuthViewModel(), permanent: true);
   GlobalKey<FormState> _key = GlobalKey<FormState>();
 
   @override
@@ -48,6 +55,7 @@ class RegisterScreen extends StatelessWidget {
                   height: 32,
                 ),
                 CustomTextField(
+                  controller: _authViewModel.tdNameRegister,
                   label: "اسم المستخدم",
                   suffixPath: "assets/svgs/person.svg",
                   validation: (e) {
@@ -59,16 +67,22 @@ class RegisterScreen extends StatelessWidget {
                 const SizedBox(
                   height: 16,
                 ),
-                const CustomTextField(
+                CustomTextField(
+                  controller: _authViewModel.tdEmailRegister,
                   label: "الايميل",
                   suffixPath: "assets/svgs/message.svg",
                   isEmail: true,
-                
+                  validation: (e) {
+                    if (!GetUtils.isEmail(e)) {
+                      return "بريد الكتروني غير صالح";
+                    }
+                  },
                 ),
                 const SizedBox(
                   height: 16,
                 ),
                 CustomTextField(
+                  controller: _authViewModel.tdPasswordRegister,
                   label: "كلمة المرور",
                   suffixPath: "assets/svgs/password.svg",
                   isPassword: true,
@@ -96,10 +110,27 @@ class RegisterScreen extends StatelessWidget {
                 const SizedBox(
                   height: 32,
                 ),
-                SeconderyButton(
-                  height: 40,
-                  textButton: "انشاء حساب",
-                  onClicked: () {},
+                Consumer<AuthViewModel>(
+                  builder: (_, __, ___) {
+                    return SeconderyButton(
+                      height: 40,
+                      textButton: "انشاء حساب",
+                      isLoading: _authViewModel.isLoading,
+                      onClicked: () {
+                        if (_key.currentState!.validate()) {
+                          _authViewModel.signUp(
+                              user: UserModel(
+                            email: _authViewModel.tdEmailRegister.text,
+                            password: _authViewModel.tdPasswordRegister.text,
+                            fcm: SharedPref.instance.getFCMToken(),
+                            type: SharedPref.instance.getUserType(),
+                            deviceId: _authViewModel.identifier,
+                            username: _authViewModel.tdNameRegister.text,
+                          ));
+                        }
+                      },
+                    );
+                  },
                 ),
                 const SizedBox(
                   height: 32,
@@ -110,8 +141,7 @@ class RegisterScreen extends StatelessWidget {
                     highlightColor: ColorManger.instance.transColor,
                     splashColor: ColorManger.instance.transColor,
                     onTap: () {
-                      Navigator.pushReplacement(context,
-                          MaterialPageRoute(builder: (ctx) => LoginScreen()));
+                      Get.off(() => LoginScreen());
                     },
                     child: RichText(
                       text: TextSpan(

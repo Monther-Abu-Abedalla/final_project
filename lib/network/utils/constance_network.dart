@@ -24,7 +24,7 @@ abstract class ConstanceNetwork {
   // post End Points:
   static String getHomeEndPoints = "posts/get_related_posts.php";
   static String createCommentEndPoint = "comments/create_comment.php";
-  static String getPostDetailesEndPoint = "posts/get_post_details.php";
+  static String getPostDetailedEndPoint = "posts/get_post_details.php";
   static String addToFavoritesEndPoint = "posts/add_to_favorites.php";
   static String removeFromFavoritesEndPoint = "posts/remove_from_favorites.php";
   static String deletePostEndPoint = "posts/delete_post.php";
@@ -46,7 +46,7 @@ abstract class ConstanceNetwork {
 
   static String blockUserEndPoint = "user/block_user.php";
 
-  static String repoeCommentEndPoint = "comments/report_comment.php";
+  static String repoCommentEndPoint = "comments/report_comment.php";
 
   // todo here for Header Requests ::
   static Map<String, String> header(int typeToken) {

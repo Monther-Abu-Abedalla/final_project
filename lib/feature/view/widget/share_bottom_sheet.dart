@@ -1,8 +1,11 @@
 import 'package:consulting_app/feature/core/theme/input_theme/app_text_field_theme.dart';
 import 'package:consulting_app/feature/view/widget/secondery_button.dart';
 import 'package:consulting_app/feature/view/widget/unselected_button.dart';
+import 'package:consulting_app/feature/view_model/home_view_model/home_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 
 class ShowBottomSheet extends StatelessWidget {
   const ShowBottomSheet(
@@ -11,6 +14,7 @@ class ShowBottomSheet extends StatelessWidget {
 
   final String body;
   final int shareRequestId;
+  static HomeViewModel homeViewModel = Get.find<HomeViewModel>();
 
   @override
   Widget build(BuildContext context) {
@@ -38,19 +42,33 @@ class ShowBottomSheet extends StatelessWidget {
           const SizedBox(
             height: 40,
           ),
-          SeconderyButton(
-            textButton: "الموافقة",
-            onClicked: () async {
-              Navigator.pop(context);
+          Consumer<HomeViewModel>(
+            builder: (_, home, __) {
+              return SeconderyButton(
+                isLoading: home.isLoadingSharePost,
+                textButton: "الموافقة",
+                onClicked: () async {
+                  await homeViewModel.updateShareRequestNotification(
+                      shareRequestId: shareRequestId, status: 2);
+                  Get.back();
+                },
+              );
             },
           ),
           const SizedBox(
             height: 16,
           ),
-          UnselectedButton(
-            text: "الرفض",
-            onPressed: () async {
-              Navigator.pop(context);
+          Consumer<HomeViewModel>(
+            builder: (_, home, __) {
+              return UnselectedButton(
+                isLoading: home.isLoadingDelete,
+                text: "الرفض",
+                onPressed: () async {
+                  await homeViewModel.updateShareRequestNotification(
+                      shareRequestId: shareRequestId, status: 0);
+                  Get.back();
+                },
+              );
             },
           ),
           const SizedBox(

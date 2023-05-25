@@ -1,4 +1,8 @@
 // ignore_for_file: unused_field
+
+import 'dart:convert';
+
+import 'package:consulting_app/feature/model/auth/user_model.dart';
 import 'package:consulting_app/utils/constance/constance.dart';
 import 'package:get/get_utils/src/extensions/dynamic_extensions.dart';
 import 'package:logger/logger.dart';
@@ -80,14 +84,14 @@ class SharedPref {
     _prefs?.setString(userDataKey, user);
   }
 
-  // UserModel? getCurrentUserData() {
-  //   try {
-  //      String userString = _prefs?.getString(userDataKey) ?? "";
-  //   return UserModel.fromJson(json.decode(userString));
-  //   } catch (e) {
-  //     return null;
-  //   }
-  // }
+  UserModel? getCurrentUserData() {
+    try {
+       String userString = _prefs?.getString(userDataKey) ?? "";
+    return UserModel.fromJson(json.decode(userString));
+    } catch (e) {
+      return null;
+    }
+  }
 
   setFCMToken(String fcmToken) async {
     try {

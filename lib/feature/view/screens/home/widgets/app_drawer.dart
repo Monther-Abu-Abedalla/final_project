@@ -5,8 +5,11 @@ import 'package:consulting_app/feature/view/screens/app_summary/app_summary_scre
 import 'package:consulting_app/feature/view/screens/favorite_posts/favorite_posts_screen.dart';
 import 'package:consulting_app/feature/view/screens/my_posts/my_posts_screen.dart';
 import 'package:consulting_app/feature/view/screens/privacy_policy/privacy_policy_screen.dart';
+import 'package:consulting_app/feature/view_model/home_view_model/home_view_model.dart';
+import 'package:consulting_app/utils/shared/sh_util.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 
 import 'drawer_item.dart';
@@ -14,7 +17,8 @@ import 'drawer_item.dart';
 class AppDrawer extends StatelessWidget {
   const AppDrawer({Key? key}) : super(key: key);
 
-
+  static HomeViewModel homeViewModel =
+      Get.put<HomeViewModel>(HomeViewModel(), permanent: true);
 
   @override
   Widget build(BuildContext context) {
@@ -30,19 +34,15 @@ class AppDrawer extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  "Monther Abu Abedallah",
-                  style: Theme.of(context)
-                      .textTheme
-                      .headlineMedium!
+                  SharedPref.instance.getCurrentUserData()?.username ?? "",
+                  style: Theme.of(context).textTheme.headlineMedium!
                       .copyWith(color: ColorManger.instance.backgroundColor),
                 ),
                 const SizedBox(
                   height: 10,
                 ),
-                Text("montherabedallah@gmail.com",
-                    style: Theme.of(context)
-                        .textTheme
-                        .headlineMedium!
+                Text(SharedPref.instance.getCurrentUserData()?.email ?? "",
+                    style: Theme.of(context).textTheme.headlineMedium!
                         .copyWith(color: ColorManger.instance.backgroundColor)),
               ],
             ),
@@ -111,15 +111,15 @@ class AppDrawer extends StatelessWidget {
           // ),
           DrawerItem(
             onTap: () {
-              Get.to(() => const AccountStatusScreen(
-                    isFromNotification: false,
-                  ));
+              Get.to(() => const AccountStatusScreen(isFromNotification: false,));
             },
             iconPath: "assets/svgs/status_bar.svg",
             title: "حالة حسابي",
           ),
           DrawerItem(
-            onTap: () {},
+            onTap: () {
+              homeViewModel.logOut();
+            },
             iconPath: "assets/svgs/sign_out.svg",
             title: "تسجيل خروج",
           ),

@@ -1,14 +1,11 @@
 import 'package:consulting_app/fcm/app_fcm.dart';
 import 'package:consulting_app/feature/core/theme/main_theme/app_theme.dart';
 import 'package:consulting_app/feature/view/screens/splash/splash_screen.dart';
-import 'package:consulting_app/utils/localization/localization_service.dart';
 import 'package:consulting_app/utils/shared/dynamic_link_service.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:logger/logger.dart';
-
-import '../../main.dart';
 
 class AppWidget extends StatefulWidget {
   const AppWidget({Key? key}) : super(key: key);
@@ -56,16 +53,12 @@ class _AppWidgetState extends State<AppWidget> {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      enableLog: true,
       title: "consuliting app",
       debugShowCheckedModeBanner: false,
       locale: const Locale('ar', 'us'),
-      fallbackLocale: LocalizationService.fallbackLocale,
       themeMode: ThemeMode.system,
       home: const SplashScreen(),
-      translations: LocalizationService(),
       theme: AppTheme.instance.materialLightTheme,
-      initialBinding: Bind(),
     );
   }
 }

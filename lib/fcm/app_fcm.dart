@@ -125,10 +125,16 @@ class AppFcm {
       var map = jsonDecode(message.data["data"]);
       if (Constance.instance.changeAccountStatusId ==
           map[Constance.instance.id]) {
+        homeViewModel.getProfile();
       } else if (map[Constance.instance.id] == Constance.instance.newComment) {
+        homeViewModel.getPostById(
+            id: map[Constance.instance.postId], isFromNotification: true);
       } else if (map[Constance.instance.id] ==
           Constance.instance.postAddedToMe) {
+        homeViewModel.getHomePosts();
       } else if (map[Constance.instance.id] == Constance.instance.needPayment) {
+        homeViewModel.getConsultationSubscription(
+            postId: map[Constance.instance.postId]);
       } else if (map[Constance.instance.id] ==
           Constance.instance.successPayment) {
         Get.offAll(PostDetailsScreen(
@@ -136,7 +142,11 @@ class AppFcm {
           postId: map[Constance.instance.postId],
         ));
       } else if (map[Constance.instance.id] ==
-          Constance.instance.requestShare) {}
+          Constance.instance.requestShare) {
+        homeViewModel.showShareBottomSheet(
+            body: notification.body ?? "",
+            shareRequestId: map[Constance.instance.shareRequsetId]);
+      }
     } catch (e) {
       Logger().e("updatePages $e");
     }
@@ -150,6 +160,7 @@ class AppFcm {
 
       if (Constance.instance.changeAccountStatusId ==
           map[Constance.instance.id]) {
+        homeViewModel.getProfile();
         Get.off(() => const AccountStatusScreen(
               isFromNotification: true,
             ));
@@ -169,14 +180,24 @@ class AppFcm {
           isFromNotification: true,
           postId: map[Constance.instance.postId],
         ));
+        homeViewModel.getConsultationSubscription(
+            postId: map[Constance.instance.postId]);
       } else if (Constance.instance.id ==
           map[Constance.instance.successPayment]) {
         Get.offAll(PostDetailsScreen(
           isFromNotification: true,
           postId: map[Constance.instance.postId],
         ));
+
+        homeViewModel.getPostById(
+            id: map[Constance.instance.postId], isFromNotification: true);
       } else if (map[Constance.instance.id] ==
-          Constance.instance.requestShare) {}
+          Constance.instance.requestShare) {
+        homeViewModel.showShareBottomSheet(
+            body: remoteMessage.notification?.title ?? "",
+            shareRequestId:
+                remoteMessage.data[Constance.instance.shareRequsetId]);
+      }
     } catch (e) {
       debugPrint(e.toString());
     }

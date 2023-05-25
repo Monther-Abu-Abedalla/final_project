@@ -7,7 +7,7 @@ class Constance {
   Constance._();
 
   // to do Login State User ::
-  final String userLoginedState = "userLoginedState";
+  final String userLoggedState = "userLoginedState";
   final String userEnterdState = "userEnterdState";
   final String chooseTopicsState = "userChooseTopicState";
   final String userAddCertificates = "userAddCertificates";

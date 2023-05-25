@@ -7,6 +7,8 @@ import 'package:consulting_app/utils/constance/constance.dart';
 import 'package:consulting_app/utils/shared/sh_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get_navigation/src/extension_navigation.dart';
+import 'package:get/state_manager.dart';
 import 'package:logger/logger.dart';
 
 class ChooseUserTypeScreen extends StatelessWidget {
@@ -67,10 +69,7 @@ class ChooseUserTypeScreen extends StatelessWidget {
                         SharedPref.instance.setUserType(
                             userType: Constance.instance.questionerUserType);
                         Logger().e(SharedPref.instance.getUserType());
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (ctx) => RegisterScreen()));
+                        Get.off(() => RegisterScreen());
                       }),
                   const SizedBox(
                     height: 32,
@@ -81,10 +80,7 @@ class ChooseUserTypeScreen extends StatelessWidget {
                         SharedPref.instance.setUserType(
                             userType: Constance.instance.consultantUserType);
                         Logger().e(SharedPref.instance.getUserType());
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (ctx) => RegisterScreen()));
+                        Get.off(() => RegisterScreen());
                       }),
                 ],
               ),

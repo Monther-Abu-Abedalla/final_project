@@ -1,17 +1,22 @@
 // ignore_for_file: must_be_immutable
 
 import 'package:consulting_app/feature/core/theme/color/color_manger.dart';
+import 'package:consulting_app/feature/model/home/post_model.dart';
+import 'package:consulting_app/feature/model/home/topic_consultants_model.dart';
 import 'package:consulting_app/feature/view/widget/primary_button.dart';
+import 'package:consulting_app/feature/view_model/home_view_model/home_view_model.dart';
 import 'package:flutter/material.dart';
-
+import 'package:get/get.dart';
 
 class PersonItem extends StatelessWidget {
   PersonItem({
     Key? key,
+    required this.topicConsultants,
     required this.myKey,
   }) : super(key: key);
 
-
+  final TopicConsultants topicConsultants;
+  static HomeViewModel homeViewModel = Get.find<HomeViewModel>();
   GlobalKey<FormState> myKey = GlobalKey<FormState>();
 
   @override
@@ -42,11 +47,8 @@ class PersonItem extends StatelessWidget {
                   height: 16,
                 ),
                 Text(
-            
-                  "Monther Abu Abedallah",
-                  style: Theme.of(context)
-                      .textTheme
-                      .headlineSmall!
+                  "${topicConsultants.userName}",
+                  style: Theme.of(context).textTheme.headlineSmall!
                       .copyWith(color: ColorManger.instance.primaryColor),
                 ),
               ],
@@ -59,7 +61,23 @@ class PersonItem extends StatelessWidget {
             left: 10,
             child: PrimaryButton(
               height: 36,
-              onClicked: () {},
+              onClicked: () {
+                if (myKey.currentState!.validate()) {
+                  homeViewModel.createNewPost(
+                      post: Post(
+                    title: homeViewModel.tdTitle.text,
+                    content: homeViewModel.tdContent.text,
+                    receiverId: topicConsultants.id,
+                    topicId: homeViewModel.selectedTopic?.id ?? 0,
+                    type: homeViewModel.isPublic
+                        ? 1
+                        : 0, // هل البوست موجه للكل ولا لشخص واحد
+                    makerViewingType: homeViewModel.isName
+                        ? 0
+                        : 1, // الناس تشوفه ولا لا/ الناس تشوفه ولا لا
+                  ));
+                }
+              },
               textButton: "توجيه الاستشارة",
             ))
       ],

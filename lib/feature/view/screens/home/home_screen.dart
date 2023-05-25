@@ -1,13 +1,21 @@
+import 'package:consulting_app/feature/core/theme/color/color_manger.dart';
 import 'package:consulting_app/feature/view/screens/home/widgets/app_drawer.dart';
 import 'package:consulting_app/feature/view/screens/home/widgets/home_header.dart';
 import 'package:consulting_app/feature/view/screens/home/widgets/post.dart';
+import 'package:consulting_app/feature/view/widget/circle_loading.dart';
+import 'package:consulting_app/feature/view_model/home_view_model/home_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 
 import '../notifications/notifications_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
+
+  static HomeViewModel homeViewModel =
+      Get.put(HomeViewModel(), permanent: true);
 
   @override
   Widget build(BuildContext context) {
@@ -17,8 +25,7 @@ class HomeScreen extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (ctx) => const NotificationsScreen()));
+              Get.to(() => const NotificationsScreen());
             },
             icon: SvgPicture.asset(
               "assets/svgs/notification.svg",
@@ -28,7 +35,9 @@ class HomeScreen extends StatelessWidget {
         title: const Text('الصفحة الرئيسية'),
       ),
       body: RefreshIndicator(
-        onRefresh: () async {},
+        onRefresh: () async {
+          await homeViewModel.refreshHome();
+        },
         child: ListView(
           primary: true,
           shrinkWrap: true,
@@ -41,13 +50,32 @@ class HomeScreen extends StatelessWidget {
             const SizedBox(
               height: 20,
             ),
-            ListView(
-              primary: false,
-              shrinkWrap: true,
-              children: [
-                PostItem(),
-              ],
-            ),
+            Consumer<HomeViewModel>(
+              builder: (_, home, __) {
+                if (home.isLoading) {
+                  return Column(
+                    children: [
+                      const SizedBox(
+                        height: 50,
+                      ),
+                      CircleLoading(
+                        background: ColorManger.instance.primaryColor,
+                      ),
+                    ],
+                  );
+                } else if (home.homePosts.isNotEmpty) {
+                  return ListView(
+                    primary: false,
+                    shrinkWrap: true,
+                    children: home.homePosts.map((post) {
+                      return PostItem(post: post);
+                    }).toList(),
+                  );
+                } else {
+                  return const SizedBox();
+                }
+              },
+            )
           ],
         ),
       ),
