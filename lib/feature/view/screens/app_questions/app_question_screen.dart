@@ -2,13 +2,23 @@ import 'package:consulting_app/feature/view/screens/app_questions/widget/questio
 import 'package:consulting_app/feature/view/screens/home/widgets/custom_loading.dart';
 import 'package:consulting_app/feature/view_model/home_view_model/home_view_model.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
-class AppQuestionScreen extends StatelessWidget {
+class AppQuestionScreen extends StatefulWidget {
   const AppQuestionScreen({Key? key}) : super(key: key);
 
-  static HomeViewModel homeViewModel = Get.find<HomeViewModel>();
+  @override
+  State<AppQuestionScreen> createState() => _AppQuestionScreenState();
+}
+
+class _AppQuestionScreenState extends State<AppQuestionScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      Provider.of<HomeViewModel>(context , listen: false).getQuestions();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

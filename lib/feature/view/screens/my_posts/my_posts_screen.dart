@@ -2,15 +2,25 @@ import 'package:consulting_app/feature/view/screens/home/widgets/custom_loading.
 import 'package:consulting_app/feature/view/screens/home/widgets/post.dart';
 import 'package:consulting_app/feature/view_model/home_view_model/home_view_model.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 import '../../widget/empty_place_holder.dart';
 
-class MyPostsScreen extends StatelessWidget {
+class MyPostsScreen extends StatefulWidget {
   const MyPostsScreen({Key? key}) : super(key: key);
 
-  static HomeViewModel homeViewModel = Get.find<HomeViewModel>();
+  @override
+  State<MyPostsScreen> createState() => _MyPostsScreenState();
+}
+
+class _MyPostsScreenState extends State<MyPostsScreen> {
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      await Provider.of<HomeViewModel>(context, listen: false).getMyPosts();
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,9 +45,9 @@ class MyPostsScreen extends StatelessWidget {
           } else {
             return ListView.builder(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-              itemCount: homeViewModel.myPosts.length,
+              itemCount: builder.myPosts.length,
               itemBuilder: (context, index) =>
-                  PostItem(post: homeViewModel.myPosts.toList()[index]),
+                  PostItem(post: builder.myPosts.toList()[index]),
             );
           }
         },

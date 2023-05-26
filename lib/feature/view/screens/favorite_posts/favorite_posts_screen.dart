@@ -2,15 +2,27 @@ import 'package:consulting_app/feature/view/screens/home/widgets/custom_loading.
 import 'package:consulting_app/feature/view/screens/home/widgets/post.dart';
 import 'package:consulting_app/feature/view_model/home_view_model/home_view_model.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 import '../../widget/empty_place_holder.dart';
 
-class FavoriteScreen extends StatelessWidget {
+class FavoriteScreen extends StatefulWidget {
   const FavoriteScreen({Key? key}) : super(key: key);
 
-  static HomeViewModel homeViewModel = Get.find<HomeViewModel>();
+  @override
+  State<FavoriteScreen> createState() => _FavoriteScreenState();
+}
+
+class _FavoriteScreenState extends State<FavoriteScreen> {
+
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+       Provider.of<HomeViewModel>(context, listen: false).getFavoritePosts();
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,11 +31,6 @@ class FavoriteScreen extends StatelessWidget {
         title: const Text("المفضلة"),
       ),
       body: Consumer<HomeViewModel>(
-        // initState: (_) {
-        //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-        //     await homeViewModel.getFavoritePosts();
-        //   });
-        // },
         builder: (_, builder, __) {
           if (builder.isLoading) {
             return const CustomLoading();
@@ -35,9 +42,10 @@ class FavoriteScreen extends StatelessWidget {
           } else {
             return ListView.builder(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-              itemCount: homeViewModel.favoritePosts.length,
-              itemBuilder: (context, index) =>
-                  PostItem(post: homeViewModel.favoritePosts.toList()[index]),
+              itemCount: builder.favoritePosts.length,
+              itemBuilder: (context, index) => PostItem(
+                post: builder.favoritePosts.toList()[index],
+              ),
             );
           }
         },

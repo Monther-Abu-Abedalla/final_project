@@ -14,9 +14,6 @@ import '../notifications/notifications_screen.dart';
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
-  static HomeViewModel homeViewModel =
-      Get.put(HomeViewModel(), permanent: true);
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,9 +32,7 @@ class HomeScreen extends StatelessWidget {
         title: const Text('الصفحة الرئيسية'),
       ),
       body: RefreshIndicator(
-        onRefresh: () async {
-          await homeViewModel.refreshHome();
-        },
+        onRefresh: () async {},
         child: ListView(
           primary: true,
           shrinkWrap: true,

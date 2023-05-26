@@ -7,10 +7,23 @@ import 'package:provider/provider.dart';
 import '../../../core/theme/color/color_manger.dart';
 import '../../widget/circle_loading.dart';
 
-class NotificationsScreen extends StatelessWidget {
+class NotificationsScreen extends StatefulWidget {
   const NotificationsScreen({Key? key}) : super(key: key);
-  static HomeViewModel homeViewModel =
-      Get.put(HomeViewModel(), permanent: true);
+
+  @override
+  State<NotificationsScreen> createState() => _NotificationsScreenState();
+}
+
+class _NotificationsScreenState extends State<NotificationsScreen> {
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      Provider.of<HomeViewModel>(context , listen: false).getNotifications();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,7 +32,7 @@ class NotificationsScreen extends StatelessWidget {
       ),
       body: RefreshIndicator(
         onRefresh: () async {
-          await homeViewModel.getNotifications();
+          
         },
         child: ListView(
           primary: true,
@@ -30,11 +43,6 @@ class NotificationsScreen extends StatelessWidget {
               height: 24,
             ),
             Consumer<HomeViewModel>(
-              // initState: (_) {
-              //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-              //     homeViewModel.getNotifications();
-              //   });
-              // },
               builder: (_, home, __) {
                 if (home.isLoading) {
                   return Column(

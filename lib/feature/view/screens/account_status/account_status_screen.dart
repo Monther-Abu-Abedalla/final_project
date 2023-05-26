@@ -8,12 +8,24 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
-class AccountStatusScreen extends StatelessWidget {
+class AccountStatusScreen extends StatefulWidget {
   const AccountStatusScreen({Key? key, required this.isFromNotification})
       : super(key: key);
 
-  static HomeViewModel homeViewModel = Get.find<HomeViewModel>();
   final bool isFromNotification;
+
+  @override
+  State<AccountStatusScreen> createState() => _AccountStatusScreenState();
+}
+
+class _AccountStatusScreenState extends State<AccountStatusScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      Provider.of<HomeViewModel>(context, listen: false).getProfile();
+    });
+  }
 
   Widget image() {
     String imagePath = "assets/svgs/pending.svg";
@@ -36,7 +48,7 @@ class AccountStatusScreen extends StatelessWidget {
   }
 
   Future<bool> onWillPop() async {
-    if (isFromNotification) {
+    if (widget.isFromNotification) {
       Get.off(() => const HomeScreen());
     } else {
       Get.back();
@@ -59,11 +71,6 @@ class AccountStatusScreen extends StatelessWidget {
           ),
         ),
         body: Consumer<HomeViewModel>(
-          // initState: ( s,_ , d) async {
-          //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-          //     await homeViewModel.getProfile();
-          //   });
-          // },
           builder: (_, home, __) {
             if (home.isLoadingProfile) {
               return const CustomLoading();

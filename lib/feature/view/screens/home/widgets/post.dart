@@ -67,7 +67,10 @@ class PostItem extends StatelessWidget {
                   Expanded(
                     child: FittedBox(
                       fit: BoxFit.scaleDown,
-                      child: Text(post.makerName ?? ""),
+                      child: Text(
+                        post.makerName ?? "",
+                        textAlign: TextAlign.start,
+                      ),
                     ),
                   ),
                   Consumer<HomeViewModel>(

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:logger/logger.dart';
 
 import '../../../network/api/feature/home_helper.dart';
 import '../../../utils/constance/constance.dart';
@@ -96,7 +95,6 @@ class PostDetailsViewModel extends ChangeNotifier {
         "postId": id,
       }).then((value) => {
             operationPost = Post.fromJson(value.data),
-            Logger().e(operationPost.toJson())
           });
     } catch (e) {
       printError();

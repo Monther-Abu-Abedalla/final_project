@@ -5,10 +5,21 @@ import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
-class PrivacyPolicyScreen extends StatelessWidget {
+class PrivacyPolicyScreen extends StatefulWidget {
   const PrivacyPolicyScreen({Key? key}) : super(key: key);
 
-  static HomeViewModel homeViewModel = Get.find<HomeViewModel>();
+  @override
+  State<PrivacyPolicyScreen> createState() => _PrivacyPolicyScreenState();
+}
+
+class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      Provider.of<HomeViewModel>(context , listen: false).getPrivacy();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,11 +28,6 @@ class PrivacyPolicyScreen extends StatelessWidget {
         title: const Text('سياسة الخصوصية'),
       ),
       body: Consumer<HomeViewModel>(
-        // initState: (_) async {
-        //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-        //     await homeViewModel.getPrivacy();
-        //   });
-        // },
         builder: (_, home, __) {
           if (home.isLoading) {
             return const CustomLoading();
@@ -33,7 +39,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(24),
                 child: HtmlWidget(
-                  homeViewModel.privacyPolicy,
+                  home.privacyPolicy,
                 ),
               ),
             );

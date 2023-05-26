@@ -4,10 +4,21 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
-class AppSummaryScreen extends StatelessWidget {
+class AppSummaryScreen extends StatefulWidget {
   const AppSummaryScreen({Key? key}) : super(key: key);
 
-  static HomeViewModel homeViewModel = Get.find<HomeViewModel>();
+  @override
+  State<AppSummaryScreen> createState() => _AppSummaryScreenState();
+}
+
+class _AppSummaryScreenState extends State<AppSummaryScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      Provider.of<HomeViewModel>(context, listen: false).getAppSummary();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,11 +27,6 @@ class AppSummaryScreen extends StatelessWidget {
         title: const Text('نبذة عن التطبيق'),
       ),
       body: Consumer<HomeViewModel>(
-        // initState: (_) async {
-        //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-        //     await homeViewModel.getAppSummary();
-        //   });
-        // },
         builder: (_, home, __) {
           if (home.isLoading) {
             return const CustomLoading();
@@ -32,7 +38,7 @@ class AppSummaryScreen extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(24),
                 child: Text(
-                  homeViewModel.appSummary,
+                  home.appSummary,
                   style: Theme.of(context).textTheme.headlineSmall,
                   textAlign: TextAlign.start,
                 ),
